@@ -1,49 +1,52 @@
 import React from 'react';
-import { MoreHorizontal, Search } from 'lucide-react';
 
-const PatientList = ({ patients, selectedPatient, onSelectPatient }) => {
-    return (
-        <div className="bg-white rounded-2xl shadow">
-            <div className="py-6 pl-2">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-extrabold pl-4">Patients</h2>
-                    <button className="p-1 rounded-full hover:bg-gray-100 mr-2">
-                        <Search size={18} />
-                    </button>
-                </div>
-
-                <div className="max-h-[60rem] flex-1 overflow-y-auto">
-                    <div className="space-y-1">
-                        {patients?.map((patient) => (
-                            <div
-                                key={patient.name}
-                                className={`flex items-center justify-between p-3 rounded-lg cursor-pointer ${selectedPatient?.name === patient.name ? 'bg-[#D8FCF7]' : 'hover:bg-gray-50'
-                                    }`}
-                                onClick={() => onSelectPatient(patient)}
-                            >
-                                <div className="flex items-center space-x-3">
-                                    <img
-                                        src={patient.profile_picture || "/api/placeholder/40/40"}
-                                        alt={patient.name}
-                                        className="w-12 h-12 rounded-full object-cover"
-                                    />
-                                    <div>
-                                        <div className="font-bold text-sm">{patient.name}</div>
-                                        <div className="text-gray-500 text-sm">
-                                            {patient.gender}, {patient.age}
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className="p-1 rounded-full hover:bg-gray-200">
-                                    <MoreHorizontal size={16} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+const PatientList = ({ sessions, selectedSession, onSelectSession }) => {
+  return (
+    <div className="flex flex-col">
+      {sessions.map((session) => {
+        // UPDATED: Using snake_case keys (session_id, power_cycle_id) to match backend
+        const isActive = 
+          selectedSession?.session_id === session.session_id && 
+          selectedSession?.power_cycle_id === session.power_cycle_id;
+        
+        return (
+          <button
+            // UPDATED: key uses power_cycle_id
+            key={`${session.power_cycle_id}-${session.session_id}`}
+            onClick={() => onSelectSession(session)}
+            className={`w-full text-left transition-all duration-200 border-b border-blue-200/50 ${
+              isActive 
+                ? 'bg-white shadow-sm border-l-4 border-[#012B55] py-6 px-6' 
+                : 'bg-transparent py-5 px-6 hover:bg-blue-100/50'
+            }`}
+          >
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between mb-1">
+                <span className={`text-[10px] font-black uppercase tracking-[0.15em] ${isActive ? 'text-blue-600' : 'text-blue-400'}`}>
+                  PC: {session.power_cycle_id} {/* UPDATED KEY */}
+                </span>
+                {isActive && <div className="w-2 h-2 rounded-full bg-[#012B55]" />}
+              </div>
+              
+              <h4 className={`text-xl font-black leading-none ${isActive ? 'text-[#012B55]' : 'text-blue-900'}`}>
+                ID: {session.session_id} {/* UPDATED KEY */}
+              </h4>
+              
+              <p className={`text-xs font-bold mt-2 ${isActive ? 'text-blue-700' : 'text-blue-500 opacity-80'}`}>
+                {session.mode} {/* UPDATED: from therapyMode to mode */}
+              </p>
             </div>
+          </button>
+        );
+      })}
+      
+      {sessions.length === 0 && (
+        <div className="p-10 text-center text-blue-400 italic text-sm">
+          No records found
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default PatientList;

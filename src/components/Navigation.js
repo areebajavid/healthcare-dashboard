@@ -1,64 +1,111 @@
 import React from 'react';
-import { Home, Users, Calendar, MessageSquare, CreditCard, Settings, MoreVertical } from 'lucide-react';
-import testLogo from '../assets/TestLogo.png';
-import practitioner from '../assets/practitioner.png';
+import { Home, Activity, ShieldCheck, Terminal, Sliders, FileText, RotateCw } from 'lucide-react';
 
-const Navigation = () => {
+// Added props: activeTab and setActiveTab
+const Navigation = ({ activeTab, setActiveTab }) => {
+    
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
     return (
         <div className="p-[18px]">
-            <nav className="w-[100%] bg-white rounded-[70px] flex items-center justify-between px-6 py-2">
+            <nav className="w-[100%] bg-white rounded-[70px] flex items-center justify-between px-6 py-2 shadow-sm">
+                
+                {/* Brand Logo Section */}
                 <div className="flex items-center space-x-8">
                     <div className="flex items-center">
-                        <div className="flex items-center justify-center mt-30 ml-50">
-                            <img src={testLogo} alt="Tech.Care" />'
+                        <div className="flex items-center justify-center ml-4">
+                            <span className="text-3xl font-[900] tracking-tighter flex items-center">
+                                <span style={{ color: '#012B55' }}>InnAccel</span>
+                                <span className="ml-0.5 w-1.5 h-1.5 bg-[#01F0D0] rounded-full"></span>
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                    <NavItem icon={<Home size={20} />} label="Overview" />
-                    <NavItem icon={<Users size={20} />} label="Patients" active />
-                    <NavItem icon={<Calendar size={20} />} label="Schedule" />
-                    <NavItem icon={<MessageSquare size={20} />} label="Message" />
-                    <NavItem icon={<CreditCard size={20} />} label="Transactions" />
+                {/* Main Navigation Links - Now Clickable */}
+                <div className="flex items-center space-x-2">
+                    <NavItem 
+                        icon={<Home size={20} />} 
+                        label="Fleet Status" 
+                        active={activeTab === 'Fleet Status'} 
+                        onClick={() => setActiveTab('Fleet Status')}
+                    />
+                    <NavItem 
+                        icon={<Activity size={20} />} 
+                        label="Live Sessions" 
+                        active={activeTab === 'Live Sessions'} 
+                        onClick={() => setActiveTab('Live Sessions')}
+                    />
+                    <NavItem 
+                        icon={<ShieldCheck size={20} />} 
+                        label="Calibration" 
+                        active={activeTab === 'Calibration'} 
+                        onClick={() => setActiveTab('Calibration')}
+                    />
+                    <NavItem 
+                        icon={<Terminal size={20} />} 
+                        label="Raw Logs" 
+                        active={activeTab === 'Raw Logs'} 
+                        onClick={() => setActiveTab('Raw Logs')}
+                    />
                 </div>
 
-                <div className="flex items-center">
-                    <div className='flex space-x-2'>
-                        <img
-                            src={practitioner}
-                            alt="Dr. Jose Simmons"
-                            className="rounded-full"
-                        />
-                        <div className="text-right">
-                            <div className="font-bold">Dr. Jose Simmons</div>
-                            <div className="text-sm text-gray-500">General Practitioner</div>
-                        </div>
+                {/* Actions Section */}
+                <div className="flex items-center pr-4">
+                    <div className='flex items-center'>
+                        <button 
+                            onClick={handleRefresh}
+                            className="flex items-center space-x-2 px-5 py-2 rounded-full border-2 transition-all hover:bg-gray-50 active:scale-95"
+                            style={{ borderColor: '#012B55', color: '#012B55' }}
+                        >
+                            <RotateCw size={18} className="font-bold" />
+                            <span className="font-bold text-sm uppercase tracking-wide">Sync Device</span>
+                        </button>
                     </div>
-                    <div className="border-r h-8 border-gray-200 px-2"></div>
-                    <button className="pl-2 hover:bg-gray-100 rounded-full">
-                        <Settings size={20} />
-                    </button>
-                    <button className="hover:bg-gray-100 rounded-full">
-                        <MoreVertical size={20} />
-                    </button>
+
+                    <div className="border-r h-8 border-gray-200 mx-3"></div>
+                    
+                    <div className="flex space-x-1">
+                        <button 
+                            title="System Configuration" 
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors" 
+                            style={{ color: '#012B55' }}
+                        >
+                            <Sliders size={20} />
+                        </button>
+                        
+                        <button 
+                            title="Generate Clinical Report" 
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors" 
+                            style={{ color: '#012B55' }}
+                        >
+                            <FileText size={20} />
+                        </button>
+                    </div>
                 </div>
             </nav>
         </div>
     );
 };
 
-const NavItem = ({ icon, label, active }) => {
+// Updated NavItem to receive and use onClick
+const NavItem = ({ icon, label, active, onClick }) => {
     return (
         <button
-            className={`flex items-center space-x-2 px-4 py-2 rounded-full ${active ? 'bg-[#01F0D0]' : 'hover:bg-gray-100'
-                }`}
+            onClick={onClick}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+                active 
+                ? 'bg-[#01F0D0] text-[#012B55]' 
+                : 'hover:bg-gray-100 text-[#012B55] opacity-70'
+            }`}
         >
             {icon}
-            <span className='font-bold'>{label}</span>
+            <span className='font-bold text-sm'>{label}</span>
         </button>
     );
 };
 
-
 export default Navigation;
+
