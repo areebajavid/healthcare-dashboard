@@ -1,174 +1,156 @@
-<div align="center">
-  
 # 🏥 SAANS Healthcare Dashboard
 
-### *Real-Time Respiratory Device Monitoring System*
+> A real-time monitoring dashboard for respiratory medical devices — streaming live sensor data from Android-connected devices with historical log analysis.
 
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
-
-</div>
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socketdotio&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chartdotjs&logoColor=white)
 
 ---
 
-## 📌 Project Overview
+## ✨ Features
 
-> **A real-time dashboard for monitoring respiratory medical devices (CPAP, HFNC, Bubble CPAP, Resuscitation) with live data streaming and log file analysis.**
+- 📡 **Live Monitoring** — Real-time WebSocket data from Android-connected medical devices
+- 📊 **Dynamic Charts** — Mode-specific live line charts with adaptive Y-axes
+- 🚨 **Visual Alerts** — Device notifications displayed in real-time
+- 📁 **Log File Analysis** — Upload and parse `.log` files for historical session review
+- 🔍 **Advanced Filtering** — Filter sessions by PASS/FAIL, mode, Session ID, or Power Cycle ID
+- 🔌 **Connection Status** — Live indicator for device connectivity
 
-This system receives live sensor data from an Android app connected to medical devices, displays real-time metrics, and allows historical analysis through uploaded log files.
+---
 
-### Supported Device Modes:
+## 🩺 Supported Device Modes
+
 | Mode | Parameters Monitored |
 |------|---------------------|
-| **nCPAP** | Pressure + FiO₂ |
-| **Bubble CPAP** | Pressure + FiO₂ + Flow |
-| **HFNC** | FiO₂ + Flow |
-| **Resuscitation** | PEEP + PIP + FiO₂ |
+| nCPAP | Pressure · FiO₂ |
+| Bubble CPAP | Pressure · FiO₂ · Flow |
+| HFNC | FiO₂ · Flow |
+| Resuscitation | PEEP · PIP · FiO₂ |
 
 ---
 
-## 🏗️ Architecture
-┌─────────────────┐ WebSocket ┌─────────────────┐
-│ Android App │ ─────────────────► │ Express Server │
-│ (Medical Device│ (sensorData) │ (Port 5000) │
-│ Integration) │ └────────┬────────┘
-└─────────────────┘ │
-│ Socket.io
-▼
-┌─────────────────────────────────────────────────────────┐
-│ React Frontend (Port 3000) │
-│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
-│ │ Live View │ │ History View │ │ File Upload │ │
-│ │ - Real-time │ │ - Log Parser│ │ - .log files│ │
-│ │ - Charts │ │ - Session │ │ - Session │ │
-│ │ - Alerts │ │ Analysis │ │ Storage │ │
-│ └──────────────┘ └──────────────┘ └──────────────┘ │
-└─────────────────────────────────────────────────────────┘
+## 🛠️ Tech Stack
 
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TailwindCSS, Recharts, Lucide React |
+| Backend | Node.js + Express |
+| Real-time | Socket.io (WebSockets) |
+| File Handling | Multer |
+| Charts | Recharts + Chart.js |
 
 ---
 
-## ✨ Features (What Actually Exists)
+## 📁 Project Structure
 
-### Live Monitoring Tab
-- Real-time WebSocket connection to Android device
-- Mode-specific metrics display (Pressure, FiO₂, Flow, PEEP, PIP)
-- Live line charts with dynamic Y-axes based on selected mode
-- Visual alerts for device notifications
-- Connection status indicator
-
-### History Tab
-- Upload `.log` files from medical devices
-- Parse and display session data
-- Filter sessions by PASS/FAIL status
-- Filter by Mode (HFNC, Bubble CPAP, nCPAP)
-- Search by Session ID (SID) or Power Cycle ID (PCID)
-- View detailed session metrics charts
-
----
-
-## 🛠️ Tech Stack (From Your Actual Code)
-
-| Layer | Technologies |
-|-------|-------------|
-| **Frontend** | React 18.3, TailwindCSS, Recharts, Lucide React |
-| **Backend** | Express.js, Socket.io, Multer, Cors |
-| **Real-time** | WebSockets (Socket.io) |
-| **Charts** | Recharts, Chart.js |
-| **HTTP Client** | Fetch API |
+```
+healthcare-dashboard/
+├── server/
+│   ├── index.js              # Express + Socket.io server
+│   └── utils/
+│       └── logParser.js      # Log file parsing utility
+├── src/
+│   ├── components/
+│   │   ├── PatientList.jsx
+│   │   └── SessionMetricsChart.jsx
+│   ├── utils/
+│   │   └── logParser.js      # Frontend log parsing
+│   └── App.js                # Main React component
+├── tailwind.config.js
+└── package.json
+```
 
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
+- Node.js v16+
+- Android app connected to a medical device (for live mode)
+
+### Backend
+
 ```bash
-Node.js (v16+)
-npm
-
-
-Backend Setup
-# Navigate to server folder
 cd server
-
-# Install dependencies
 npm install
-
-# Start backend server (port 5000)
 node index.js
+# Runs on http://localhost:5000
+```
 
-Frontend Setup
-# In root directory
+### Frontend
+
+```bash
 npm install
-
-# Start React app (port 3000)
 npm start
+# Runs on http://localhost:3000
+```
 
+> ⚠️ For device testing, update the Android app's target IP from `localhost` to your machine's local IP address.
 
-Environment Requirements
-Backend runs on http://localhost:5000
+---
 
-Frontend connects to backend via Socket.io
+## 📡 API & WebSocket Reference
 
-Android app sends data to http://localhost:5000 (update IP for device testing)
+### REST Endpoint
 
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/upload-log` | Upload `.log` file for parsing (`multipart/form-data`) |
 
-📁 Project Structure (Actual)
-healthcare-dashboard/
-├── public/                 # Static assets
-├── server/
-│   ├── index.js           # Express + Socket.io server
-│   └── utils/
-│       └── logParser.js   # Log file parsing utility
-├── src/
-│   ├── components/
-│   │   ├── PatientList.jsx
-│   │   └── SessionMetricsChart.jsx
-│   ├── utils/
-│   │   └── logParser.js   # Frontend log parsing
-│   ├── App.js             # Main React component
-│   └── index.js
-├── package.json
-├── tailwind.config.js
-└── .gitignore
+### WebSocket Events
 
+| Event | Direction | Description |
+|-------|-----------|-------------|
+| `sensorData` | Android → Server | Live sensor payload from device |
+| `updateDashboard` | Server → Frontend | Forwarded sensor data to UI |
 
-📡 API Endpoints
-Method	Endpoint	Description
-POST	/api/upload-log	Upload .log file for parsing (multipart/form-data)
+### Sensor Payload Schema
 
-
-
-
-WebSocket Events
-Event	Direction	Payload
-sensorData	Android → Server	{ mode, actualFlow, actualFiO2, actualPressure, setPressure, setFlow, setFiO2, setPEEP, setPIP, alertText, timestamp }
-updateDashboard	Server → Frontend	Same as above
-
-
-
-📊 Chart Configurations by Mode
-Mode	Y-Axis 1	Y-Axis 2	Y-Axis 3
-nCPAP	Pressure (cmH₂O)	FiO₂ (%)	-
-Bubble CPAP	Pressure (cmH₂O)	FiO₂ (%)	Flow (LPM)
-HFNC	FiO₂ (%)	Flow (LPM)	-
-Resuscitation	Pressure (cmH₂O)	FiO₂ (%)	-
-
-
-
-
-🔧 Dependencies (From package.json)
+```json
 {
-  "react": "^18.3.1",
-  "react-dom": "^18.3.1",
-  "react-scripts": "5.0.1",
-  "socket.io-client": "^4.8.3",
-  "recharts": "^3.7.0",
-  "chart.js": "^4.5.1",
-  "react-chartjs-2": "^5.3.1",
-  "lucide-react": "^0.461.0",
-  "tailwindcss": "^3.4.15"
+  "mode": "HFNC",
+  "actualFlow": 8.0,
+  "actualFiO2": 40,
+  "actualPressure": 5.0,
+  "setPressure": 5.0,
+  "setFlow": 8.0,
+  "setFiO2": 40,
+  "setPEEP": null,
+  "setPIP": null,
+  "alertText": "",
+  "timestamp": "2026-04-28T10:00:00Z"
 }
+```
+
+---
+
+## 📊 Chart Configuration by Mode
+
+| Mode | Y-Axis 1 | Y-Axis 2 | Y-Axis 3 |
+|------|----------|----------|----------|
+| nCPAP | Pressure (cmH₂O) | FiO₂ (%) | — |
+| Bubble CPAP | Pressure (cmH₂O) | FiO₂ (%) | Flow (LPM) |
+| HFNC | FiO₂ (%) | Flow (LPM) | — |
+| Resuscitation | Pressure (cmH₂O) | FiO₂ (%) | — |
+
+---
+
+## 📦 Key Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `socket.io-client` | Real-time WebSocket client |
+| `recharts` | Live data charts |
+| `chart.js` + `react-chartjs-2` | Session metrics charts |
+| `tailwindcss` | Styling |
+| `lucide-react` | Icons |
+| `multer` | Log file uploads |
+
+---
+
+## 📄 License
+
+MIT License © 2026
